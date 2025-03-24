@@ -78,7 +78,7 @@ def send_welcome(message):
     if c.fetchone():
         c.execute('UPDATE users SET username = ? WHERE user_id = ?', (username, user_id))
         conn.commit()
-        bot.send_message(user_id, "𝗛𝗘𝗬 𝗧𝗛𝗘𝗥𝗘 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 !<br><br>I'м Tᴇᴀм x Gᴘт 🌟<br>How Cᴀɴ ι Hᴇʟᴘ You ?<br><br>Tʏᴘᴇ /help To Sᴇᴇ How To Usᴇ Mᴇ !", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "<b>HEY THERE WELCOME!</b>\n\nI'm Team x Gpt 🌟\nHow Can I Help You?\n\nType /help To See How To Use Me!", parse_mode='HTML', disable_web_page_preview=True)
         return
 
     c.execute('SELECT COUNT(*) FROM users WHERE is_premium = 0')
@@ -92,7 +92,7 @@ def send_welcome(message):
         premium_referral = False
 
     if free_users >= MAX_FREE_USERS and not premium_referral:
-        bot.send_message(user_id, "Usᴇʀ Lιмιт Rᴇᴀcнᴇᴅ. Gᴇт ᴀ Pʀᴇмιuм Usᴇʀ's Rᴇғᴇʀʀᴀʟ Lιɴκ To Joιɴ!", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "User Limit Reached. Get a Premium User's Referral Link To Join!", parse_mode='HTML', disable_web_page_preview=True)
         return
 
     c.execute('INSERT INTO users (user_id, username, referred_by) VALUES (?, ?, ?)',
@@ -103,16 +103,16 @@ def send_welcome(message):
         new_count = c.fetchone()[0]
         if new_count >= 5:
             c.execute('UPDATE users SET is_premium = 1 WHERE user_id = ?', (referrer_id,))
-            bot.send_message(referrer_id, "🎊 <b>𝗖𝗢𝗡𝗚𝗥𝗔𝗧𝗨𝗟𝗔𝗧𝗜𝗢𝗡𝗦</b> 🎊<br><br>Tнᴀɴκ You Foʀ Cнoosιɴԍ Mᴇ !<br>ι нoᴘᴇ ʏouʀ ιɴנoʏιɴԍ 🌟👀🥳", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(referrer_id, "🎊 <b>CONGRATULATIONS</b> 🎊\n\nThank You For Choosing Me!\nI hope you're enjoying 🌟👀🥳", parse_mode='HTML', disable_web_page_preview=True)
     conn.commit()
 
     referral_link = f"https://t.me/{bot.get_me().username}?start={user_id}"
-    welcome_msg = f"""<b>🤖 Welcome to {stylize_text('Gemini AI Pro')}!</b><br><br>
-🎖️ <i>Premium Status</i>: {'Active 🎖️' if premium_referral else 'Basic'}<br>
-<i>Total Referrals</i>: <a href='{referral_link}'>𝗖𝗟𝗜𝗖𝗞 𝗛𝗘𝗥𝗘</a><br>
-🎯 Referrals Count: [implementing]<br><br>
-Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a><br>
-Powered By: <a href='https://t.me/PB_X01'>PB_X01</a><br><br>
+    welcome_msg = f"""<b>🤖 Welcome to {stylize_text('Gemini AI Pro')}!</b>\n\n
+<i>Premium Status</i>: {'Active 🎖️' if premium_referral else 'Basic'}\n
+<i>Total Referrals</i>: <a href='{referral_link}'>CLICK HERE</a>\n
+🎯 Referrals Count: [implementing]\n\n
+Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a>\n
+Powered By: <a href='https://t.me/PB_X01'>PB_X01</a>\n\n
 Use /help for commands"""
     bot.send_message(user_id, welcome_msg, parse_mode='HTML', disable_web_page_preview=True)
 
@@ -137,45 +137,45 @@ def show_referral(message):
         referred_users = c.fetchall()
         referred_text = ""
         if referred_users:
-            referred_text += "    ├── Referred users:<br>"
+            referred_text += "    ├── Referred users:\n"
             for i, user in enumerate(referred_users):
                 if i == len(referred_users) - 1:
-                    referred_text += f"    └── @{user[0]}<br>"
+                    referred_text += f"    └── @{user[0]}\n"
                 else:
-                    referred_text += f"    ├── @{user[0]}<br>"
+                    referred_text += f"    ├── @{user[0]}\n"
         
-        response = f"""<b>📊 {stylize_text('Your Referral Stats')}:</b><br><br>
-🔗 <i>Your Link</i>: <a href='{link}'>𝗖𝗟𝗜𝗖𝗞 𝗛𝗘𝗥𝗘</a><br>
-👥 <i>Total Referrals</i>: {count}<br>
-🎖️ <i>Premium Status</i>: {'Active' if premium else 'Inactive'}<br><br>
-Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a><br>
-Powered By: <a href='https://t.me/PB_X01'>PB_X01</a><br><br>
-<b>Referral Tree:</b><br>
-<pre>{referrer_text}<br>{referred_text}</pre>"""
+        response = f"""<b>📊 {stylize_text('Your Referral Stats')}:</b>\n\n
+<i>Your Link</i>: <a href='{link}'>CLICK HERE</a>\n
+<i>Total Referrals</i>: {count}\n
+<i>Premium Status</i>: {'Active' if premium else 'Inactive'}\n\n
+Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a>\n
+Powered By: <a href='https://t.me/PB_X01'>PB_X01</a>\n\n
+<b>Referral Tree:</b>\n
+<pre>{referrer_text}\n{referred_text}</pre>"""
         send_long_message(user_id, response)
     else:
-        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot<br><br>/start", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot\n\n/start", parse_mode='HTML', disable_web_page_preview=True)
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    help_text = f"""<b>🤖 {stylize_text('Gemini AI Pro Bot Commands')}:</b><br><br>
-🌟 /start - Start The Bot And Get Your Referral Link<br>
-📊 /referral - View Your Referral Stats And Tree<br>
-❓ /help - Show This Help Message<br>
-📈 /status - Check Your Status And Referrals<br>
-💬 /feedback - Send Feedback To The Owner<br><br>
-<b>For Premium Users:</b><br>
-🎖️ Premium Features Are Available Automatically<br><br>
-<b>Owner Commands:</b><br>
-👑 /approve - Approve Premium Access<br>
-🚫 /remove - Remove Premium Access<br>
-📋 /users - List All users<br>
-🚫 /ban - Ban a User<br>
-✅ /unban - Unban a User<br>
-📢 /broadcast - Send a Message To All Users<br>
-📊 /stats - Show Bot Statistics<br><br>
-Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a><br>
-Powered By: <a href='https://t.me/PB_X01'>PB_X01</a><br><br>
+    help_text = f"""<b>🤖 {stylize_text('Gemini AI Pro Bot Commands')}:</b>\n\n
+<i>/start</i> - Start The Bot And Get Your Referral Link\n
+<i>/referral</i> - View Your Referral Stats And Tree\n
+<i>/help</i> - Show This Help Message\n
+<i>/status</i> - Check Your Status And Referrals\n
+<i>/feedback</i> - Send Feedback To The Owner\n\n
+<b>For Premium Users:</b>\n
+🎖️ Premium Features Are Available Automatically\n\n
+<b>Owner Commands:</b>\n
+👑 /approve - Approve Premium Access\n
+🚫 /remove - Remove Premium Access\n
+📋 /users - List All users\n
+🚫 /ban - Ban a User\n
+✅ /unban - Unban a User\n
+📢 /broadcast - Send a Message To All Users\n
+📊 /stats - Show Bot Statistics\n\n
+Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a>\n
+Powered By: <a href='https://t.me/PB_X01'>PB_X01</a>\n\n
 💬 Simply Send a Message Or Photo To Get AI Responses!"""
     send_long_message(message.chat.id, help_text)
 
@@ -187,15 +187,15 @@ def show_status(message):
     if user_data:
         premium, referrals = user_data
         status_text = "🎖️ Premium" if premium else "🆓 Basic"
-        response = f"""<b>📊 {stylize_text('Your Status')}:</b><br><br>
-🔑 Status: {status_text}<br>
-👥 Referrals: {referrals}<br><br>
-Refer 5 Users to Get Premium!<br><br>
-Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a><br>
+        response = f"""<b>📊 {stylize_text('Your Status')}:</b>\n\n
+<i>Status</i>: {status_text}\n
+<i>Referrals</i>: {referrals}\n\n
+Refer 5 Users to Get Premium!\n\n
+Support: <a href='https://t.me/TEAM_X_OG'>TEAM X OG</a>\n
 Powered By: <a href='https://t.me/PB_X01'>PB_X01</a>"""
         bot.send_message(user_id, response, parse_mode='HTML', disable_web_page_preview=True)
     else:
-        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot<br><br>/start", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot\n\n/start", parse_mode='HTML', disable_web_page_preview=True)
 
 @bot.message_handler(commands=['feedback'])
 def send_feedback(message):
@@ -203,11 +203,11 @@ def send_feedback(message):
     try:
         feedback_text = message.text.split(maxsplit=1)[1]
         user_tag = f"@{message.from_user.username}" if message.from_user.username else f"ID: {user_id}"
-        owner_msg = f"<b>📝 Feedback from {user_tag}:</b><br>{feedback_text}"
+        owner_msg = f"<b>📝 Feedback from {user_tag}:</b>\n{feedback_text}"
         bot.send_message(OWNER_ID, owner_msg, parse_mode='HTML', disable_web_page_preview=True)
         bot.send_message(user_id, "✅", disable_web_page_preview=True)
     except:
-        bot.send_message(user_id, "𝗨𝘀𝗮𝗴𝗲: /𝗳𝗲𝗲𝗱𝗯𝗮𝗰𝗸 &lt;𝗺𝗲𝘀𝘀𝗮𝗴𝗲&gt;", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "Usage: /feedback <message>", parse_mode='HTML', disable_web_page_preview=True)
 
 @bot.message_handler(commands=['approve'])
 def approve_premium(message):
@@ -218,7 +218,7 @@ def approve_premium(message):
             conn.commit()
             bot.send_message(message.chat.id, f"✅ User {target_id} approved as premium!", disable_web_page_preview=True)
         except:
-            bot.send_message(message.chat.id, "❌ Usage: /approve &lt;user_id&gt;", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(message.chat.id, "❌ Usage: /approve <user_id>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "🙅", disable_web_page_preview=True)
 
@@ -231,7 +231,7 @@ def remove_premium(message):
             conn.commit()
             bot.send_message(message.chat.id, f"✅ User {target_id} premium access removed!", disable_web_page_preview=True)
         except:
-            bot.send_message(message.chat.id, "❌ Usage: /remove &lt;user_id&gt;", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(message.chat.id, "❌ Usage: /remove <user_id>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "🙅", disable_web_page_preview=True)
 
@@ -241,9 +241,9 @@ def list_users(message):
         c.execute('SELECT user_id, username, is_premium, referral_count, is_banned FROM users')
         users = c.fetchall()
         
-        response = f"<b>📊 {stylize_text('Registered Users')}:</b><br><br>"
+        response = f"<b>📊 {stylize_text('Registered Users')}:</b>\n\n"
         for user in users:
-            response += f"ID: {user[0]}<br>User: @{user[1]}<br>Premium: {'✅' if user[2] else '❌'}<br>Referrals: {user[3]}<br>Banned: {'✅' if user[4] else '❌'}<br><br>"
+            response += f"ID: {user[0]}\nUser: @{user[1]}\nPremium: {'✅' if user[2] else '❌'}\nReferrals: {user[3]}\nBanned: {'✅' if user[4] else '❌'}\n\n"
         
         send_long_message(message.chat.id, response)
     else:
@@ -258,7 +258,7 @@ def ban_user(message):
             conn.commit()
             bot.send_message(message.chat.id, f"✅ User {target_id} has been banned.", disable_web_page_preview=True)
         except:
-            bot.send_message(message.chat.id, "❌ Usage: /ban &lt;user_id&gt;", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(message.chat.id, "❌ Usage: /ban <user_id>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "❌ Owner-only command", disable_web_page_preview=True)
 
@@ -271,7 +271,7 @@ def unban_user(message):
             conn.commit()
             bot.send_message(message.chat.id, f"✅ User {target_id} has been unbanned.", disable_web_page_preview=True)
         except:
-            bot.send_message(message.chat.id, "❌ Usage: /unban &lt;user_id&gt;", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(message.chat.id, "❌ Usage: /unban <user_id>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "🙅", disable_web_page_preview=True)
 
@@ -289,7 +289,7 @@ def broadcast_message(message):
                     pass
             bot.send_message(message.chat.id, "✅ Broadcast sent to all users.", disable_web_page_preview=True)
         except:
-            bot.send_message(message.chat.id, "❌ Usage: /broadcast &lt;message&gt;", parse_mode='HTML', disable_web_page_preview=True)
+            bot.send_message(message.chat.id, "❌ Usage: /broadcast <message>", parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "🙅", disable_web_page_preview=True)
 
@@ -302,10 +302,10 @@ def show_stats(message):
         premium_users = c.fetchone()[0]
         c.execute('SELECT COUNT(*) FROM users WHERE is_banned = 1')
         banned_users = c.fetchone()[0]
-        response = f"""<b>📊 {stylize_text('Bot Statistics')}:</b><br><br>
-👥 Total Users: {total_users}<br>
-🎖️ Premium Users: {premium_users}<br>
-🚫 Banned Users: {banned_users}"""
+        response = f"""<b>📊 {stylize_text('Bot Statistics')}:</b>\n\n
+<i>Total Users</i>: {total_users}\n
+<i>Premium Users</i>: {premium_users}\n
+<i>Banned Users</i>: {banned_users}"""
         bot.send_message(message.chat.id, response, parse_mode='HTML', disable_web_page_preview=True)
     else:
         bot.send_message(message.chat.id, "🙅", disable_web_page_preview=True)
@@ -322,7 +322,7 @@ def handle_messages(message):
     c.execute('SELECT is_premium, is_banned FROM users WHERE user_id = ?', (user_id,))
     user = c.fetchone()
     if not user:
-        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot<br><br>/start", parse_mode='HTML', disable_web_page_preview=True)
+        bot.send_message(user_id, "First Start The Bot Then You Can Use This Bot\n\n/start", parse_mode='HTML', disable_web_page_preview=True)
         return
     if user[1]:
         bot.send_message(user_id, "You are Banned From This Bot. If You Think This Is A Mistake Please Contact Us: @PB_X01", parse_mode='HTML', disable_web_page_preview=True)
@@ -355,7 +355,7 @@ def handle_messages(message):
                 send_long_message(user_id, f"<pre>{part.strip()}</pre>")
 
     user_tag = f"@{message.from_user.username}" if message.from_user.username else f"ID: {user_id}"
-    owner_msg = f"<b>📩 New request from {user_tag}</b><br>🗒️ Query: {prompt[:100]}..."
+    owner_msg = f"<b>📩 New request from {user_tag}</b>\nQuery: {prompt[:100]}..."
     bot.send_message(OWNER_ID, owner_msg, parse_mode='HTML', disable_web_page_preview=True)
 
 # Developer credit check
@@ -371,4 +371,4 @@ else:
 
 # Start the bot
 print("Bot is running...")
-bot.infinity_polling()
+bot.infinity_polling(
