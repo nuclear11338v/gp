@@ -149,12 +149,12 @@ Powᴇʀᴇᴅ Bʏᴇ :- [PB_X01](https://t.me/PB_X01)
 # Help command with stylized text
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    help_text = f"""**🤖 {stylize_text('Gemini AI Pro Bot Commands')}:**
+    help_text = f"""🤖 {stylize_text('Gemini AI Pro Bot Commands')}:
 
 🌟 /sтᴀʀт - Sтᴀʀт Tнᴇ Boт Aɴᴅ Gᴇт Youʀ Rᴇғᴇʀʀᴀʟ Lιɴκ
 📊 /ʀᴇғᴇʀʀᴀʟ - Vιᴇw You Rᴇғᴇʀʀᴀʟ Sтᴀтs Aɴᴅ Tʀᴇᴇ
 ❓ /нᴇʟᴘ - Sнow Tнιs Hᴇʟᴘ Mᴇssᴀԍᴇ
-📈 /sтᴀтus - Cнᴇcκ Youʀ Sтᴀтus *Aɴᴅ Rᴇғᴇʀʀᴀʟs
+📈 /sтᴀтus - Cнᴇcκ Youʀ Sтᴀтus Aɴᴅ Rᴇғᴇʀʀᴀʟs
 💬 /ғᴇᴇᴅʙᴀcκ - Sᴇɴᴅ Fᴇᴇᴅʙᴀcκ To Tнᴇ Owɴᴇʀ
 
 Foʀ Pʀᴇмιuм Usᴇʀs:
@@ -169,8 +169,8 @@ Foʀ Pʀᴇмιuм Usᴇʀs:
 📢 /ʙʀoᴀᴅcᴀsт - Sᴇɴᴅ ᴀ Mᴇssᴀԍᴇ To Aʟʟ Usᴇʀs
 📊 /sтᴀтs - Sнow Boт Sтᴀтιsтιc
 
-Suᴘᴘoʀт :- [TEAM X OG](https://t.me/TEAM_X_OG)
-Powᴇʀᴇᴅ Bʏᴇ :- [PB_X01](https://t.me/PB_X01)
+Suᴘᴘoʀт :- @TEAM_X_OG)
+Powᴇʀᴇᴅ Bʏᴇ :- @PB_X01)
 
  💬 Sιмᴘʟʏ Sᴇɴᴅ ᴀ Mᴇssᴀԍᴇ Oʀ Pнoтo To Gᴇт Aι Rᴇsᴘoɴsᴇs!"""
     bot.send_message(message.chat.id, help_text, parse_mode='Markdown', disable_web_page_preview=True)
